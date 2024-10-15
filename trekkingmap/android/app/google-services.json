@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "104854087001",
+    "project_id": "flutter-trekkingmap",
+    "storage_bucket": "flutter-trekkingmap.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104854087001:android:40a78e782baaa88f951848",
+        "android_client_info": {
+          "package_name": "np.solukhumbu.trekkingmap"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKtytEe8aOTXcCRJnf4WobLvq6GXbcVVc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
