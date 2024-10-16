@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 // import 'package:trekkingmap/services/cloud/cloud_note.dart';
-import 'package:trekkingmap/services/crud/notes_service.dart';  // until ch-36--st-19
+// import 'package:trekkingmap/services/crud/notes_service.dart';  // until ch-36--st-19
 import 'package:trekkingmap/utilities/dialogs/delete_dialog.dart';
+import 'package:trekkingmap/views/notes/notes_view.dart';
 
 
 // typedef NoteCallback = void Function(DatabaseNote note); // pac--crud/notes_service.dart'  // until ch-36--st-19
