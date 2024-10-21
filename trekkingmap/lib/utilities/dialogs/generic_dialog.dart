@@ -6,10 +6,10 @@ Future<T?> showGenericDialog<T>({
   required BuildContext context,
   required String title,
   required String content,
-  required DialogOptionBuilder optionBuilder,
+  required DialogOptionBuilder optionsBuilder,
 }) {
-  final options = optionBuilder();
-  return showDialog(
+  final options = optionsBuilder();
+  return showDialog<T>(
     context: context,
     builder: (context) {
       return AlertDialog(

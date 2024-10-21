@@ -1,16 +1,14 @@
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:trekkingmap/constants/routes.dart';
-import 'package:trekkingmap/firebase_options.dart';
 import 'package:trekkingmap/services/auth/auth_exceptions.dart';
 import 'package:trekkingmap/services/auth/auth_service.dart';
-import 'package:trekkingmap/utilities/show_error_dialog.dart';
+import 'package:trekkingmap/utilities/dialogs/error_dialog.dart';
 
 class RegisterView extends StatefulWidget {
-  const RegisterView({super.key});
+  const RegisterView({Key? key}) : super(key: key);
 
   @override
-  State<RegisterView> createState() => _RegisterViewState();
+  _RegisterViewState createState() => _RegisterViewState();
 }
 
 class _RegisterViewState extends State<RegisterView> {
@@ -35,7 +33,7 @@ class _RegisterViewState extends State<RegisterView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Register Page'),
+        title: const Text('Register'),
       ),
       body: Column(
         children: [
@@ -44,8 +42,8 @@ class _RegisterViewState extends State<RegisterView> {
             enableSuggestions: false,
             autocorrect: false,
             keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-              hintText: 'email',
+            decoration: const InputDecoration(
+              hintText: 'Enter your email here',
             ),
           ),
           TextField(
@@ -53,15 +51,14 @@ class _RegisterViewState extends State<RegisterView> {
             obscureText: true,
             enableSuggestions: false,
             autocorrect: false,
-            decoration: InputDecoration(
-              hintText: 'password',
+            decoration: const InputDecoration(
+              hintText: 'Enter your password here',
             ),
           ),
           TextButton(
             onPressed: () async {
               final email = _email.text;
               final password = _password.text;
-
               try {
                 await AuthService.firebase().createUser(
                   email: email,
@@ -69,7 +66,6 @@ class _RegisterViewState extends State<RegisterView> {
                 );
                 AuthService.firebase().sendEmailVerification();
                 Navigator.of(context).pushNamed(verifyEmailRoute);
-                print('going to verify email page  ...');
               } on WeakPasswordAuthException {
                 await showErrorDialog(
                   context,
@@ -92,17 +88,17 @@ class _RegisterViewState extends State<RegisterView> {
                 );
               }
             },
-            child: Text('Register here'),
+            child: const Text('Register'),
           ),
           TextButton(
-              onPressed: () {
-                print('login try...');
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  loginRoute,
-                  (route) => false,
-                );
-              },
-              child: Text('login')),
+            onPressed: () {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                loginRoute,
+                (route) => false,
+              );
+            },
+            child: const Text('Already registered? Login here!'),
+          )
         ],
       ),
     );

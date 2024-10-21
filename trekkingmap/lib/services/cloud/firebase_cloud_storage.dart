@@ -4,8 +4,7 @@ import 'package:trekkingmap/services/cloud/cloud_storage_constants.dart';
 import 'package:trekkingmap/services/cloud/cloud_storage_exceptions.dart';
 
 class FirebaseCloudStorage {
-  final notes =
-      FirebaseFirestore.instance.collection('notes'); // cloud_firestore.dart
+  final notes = FirebaseFirestore.instance.collection('notes');
 
   Future<void> deleteNote({required String documentId}) async {
     try {
@@ -34,48 +33,36 @@ class FirebaseCloudStorage {
   Future<Iterable<CloudNote>> getNotes({required String ownerUserId}) async {
     try {
       return await notes
-          .where(ownerUserIdFieldName, isEqualTo: ownerUserId)
+          .where(
+            ownerUserIdFieldName,
+            isEqualTo: ownerUserId,
+          )
           .get()
           .then(
             (value) => value.docs.map(
               (doc) {
                 return CloudNote(
                   documentId: doc.id,
-                  ownerUserId: doc.data()[ownerUserIdFieldName],
-                  text: doc.data()[textFieldName],
+                  ownerUserId: doc.data()[ownerUserIdFieldName] as String,
+                  text: doc.data()[textFieldName] as String,
                 );
               },
             ),
           );
     } catch (e) {
-      throw CouldNotGetAllNotesException;
+      throw CouldNotGetAllNotesException();
     }
   }
 
-  Future<CloudNote> createNewNote({required String ownerUserId}) async {
-    final document = await notes.add({
+  void createNewNote({required String ownerUserId}) async {
+    await notes.add({
       ownerUserIdFieldName: ownerUserId,
       textFieldName: '',
     });
-
-    final fetchedNote = await document.get();
-    return CloudNote(
-      documentId: fetchedNote.id,
-      ownerUserId: ownerUserId,
-      text: '',
-    );
   }
-
-  // void createNewNote({required String ownerUserId}) async {   // until ch-36--st-19
-  //   await notes.add({
-  //     ownerUserIdFieldName: ownerUserId,
-  //     textFieldName: '',
-  //   });
-  // }
 
   static final FirebaseCloudStorage _shared =
       FirebaseCloudStorage._sharedInstance();
   FirebaseCloudStorage._sharedInstance();
-
   factory FirebaseCloudStorage() => _shared;
 }

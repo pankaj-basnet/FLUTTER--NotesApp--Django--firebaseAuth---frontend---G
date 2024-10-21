@@ -1,15 +1,11 @@
-// import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:trekkingmap/constants/routes.dart';
 import 'package:trekkingmap/services/auth/auth_exceptions.dart';
 import 'package:trekkingmap/services/auth/auth_service.dart';
-import 'package:trekkingmap/services/auth/auth_user.dart';
-import 'package:trekkingmap/utilities/show_error_dialog.dart';
+import 'package:trekkingmap/utilities/dialogs/error_dialog.dart';
 
 class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+  const LoginView({Key? key}) : super(key: key);
 
   @override
   State<LoginView> createState() => _LoginViewState();
@@ -35,10 +31,9 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    print('login page ...#@#');
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login Page..'),
+        title: const Text('Login'),
       ),
       body: Column(
         children: [
@@ -47,8 +42,8 @@ class _LoginViewState extends State<LoginView> {
             enableSuggestions: false,
             autocorrect: false,
             keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-              hintText: 'email',
+            decoration: const InputDecoration(
+              hintText: 'Enter your email here',
             ),
           ),
           TextField(
@@ -56,60 +51,54 @@ class _LoginViewState extends State<LoginView> {
             obscureText: true,
             enableSuggestions: false,
             autocorrect: false,
-            decoration: InputDecoration(
-              hintText: 'password',
+            decoration: const InputDecoration(
+              hintText: 'Enter your password here',
             ),
           ),
           TextButton(
             onPressed: () async {
               final email = _email.text;
               final password = _password.text;
-
               try {
-                print(
-                    '-------------------- try block --- after FirebaseAuth.instance.signInWithEmailAndPassword');
-
                 await AuthService.firebase().logIn(
                   email: email,
                   password: password,
                 );
                 final user = AuthService.firebase().currentUser;
-                print('--- ${user?.isEmailVerified} ---');
-
                 if (user?.isEmailVerified ?? false) {
+                  // user's email is verified
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     notesRoute,
                     (route) => false,
                   );
                 } else {
-                  print('going to verify email page  ...#@##');
-
+                  // user's email is NOT verified
                   Navigator.of(context).pushNamedAndRemoveUntil(
-                      verifyEmailRoute, (route) => false);
-                }
-                // self --------- code
-                print(
-                    'end of try block --- after FirebaseAuth.instance.signInWithEmailAndPassword');
-              }on UserNotFoundAuthException{
-                 await showErrorDialog(
-                    context,
-                    'User not found / invalid credential ...',
+                    verifyEmailRoute,
+                    (route) => false,
                   );
+                }
+              } on UserNotFoundAuthException {
+                await showErrorDialog(
+                  context,
+                  'User not found',
+                );
               } on WrongPasswordAuthException {
                 await showErrorDialog(
-                    context,
-                    'Wrong credentials',
-                  );
-
-              } on GenericAuthException{
-                await showErrorDialog(context, 'Authentication error');
+                  context,
+                  'Wrong credentials',
+                );
+              } on GenericAuthException {
+                await showErrorDialog(
+                  context,
+                  'Authentication error',
+                );
               }
             },
-            child: Text('Login here'),
+            child: const Text('Login'),
           ),
           TextButton(
             onPressed: () {
-              print('notesview try... #@#');
               Navigator.of(context).pushNamedAndRemoveUntil(
                 registerRoute,
                 (route) => false,
@@ -122,5 +111,3 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 }
-
-// login can take few minutes with firebase {mb= due to slow internet } amt=
