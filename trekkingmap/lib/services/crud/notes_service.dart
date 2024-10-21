@@ -20,7 +20,6 @@ class NotesService {
   NotesService._sharedInstance() {
     _notesStreamController = StreamController<List<DatabaseNote>>.broadcast(
       onListen: () {
-        
         _notesStreamController.sink.add(_notes);
       },
     );
@@ -32,7 +31,6 @@ class NotesService {
   Stream<List<DatabaseNote>> get allNotes =>
       _notesStreamController.stream.filter((note) {
         return true;
-        
       });
 
   Future<void> getOrCreateUser({
@@ -41,10 +39,7 @@ class NotesService {
   }) async {
     try {
       final user = await getUser();
-     
-    }
-   
-    catch (e) {
+    } catch (e) {
       rethrow;
     }
   }
@@ -57,40 +52,38 @@ class NotesService {
 
   // ########################################################################
 
-
-
   Future<DatabaseNote> updateNote({
     required DatabaseNote note,
     required String text,
   }) async {
-
-   
     final note = await getNoteEmptyNew();
     final noteId = note.id;
     final noteUserId = note.userId;
 
- 
     var databaseNote = DatabaseNote(
-        id: ' foobaro ', userId: ' foobaro ', text: ' foobaro ', isSyncedWithCloud: false);
-    
+        id: ' foobaro ',
+        userId: ' foobaro ',
+        text: ' foobaro ',
+        isSyncedWithCloud: false);
+
     try {
-      Uri url = Uri.parse('http://192.168.1.71:8000/api/notes/$noteId/update/');
+      Uri url =
+          Uri.parse('http://192.168.61.237:8000/api/notes/$noteId/update/');
 
       var data = jsonEncode({
-        "user_id": noteUserId, "text": text, isSyncedWithCloudColumn: false
+        "user_id": noteUserId,
+        "text": text,
+        isSyncedWithCloudColumn: false
       });
- 
+
       final response = await http.put(url,
           headers: {
             'Content-Type': 'application/json',
           },
           body: data);
 
-      if (response.statusCode != 200) {
-       
-      }
-    } catch (e) {
-    }
+      if (response.statusCode != 200) {}
+    } catch (e) {}
     _notes.removeWhere((note) => note.id == noteId);
 
     final updatedNote = await getNoteEmptyNew();
@@ -112,19 +105,17 @@ class NotesService {
       DatabaseNote(
           id: '99', userId: '99', text: 'text', isSyncedWithCloud: false)
     ];
-  
+
     try {
-      Uri url = Uri.parse('http://192.168.1.71:8000/api/notes/');
+      Uri url = Uri.parse('http://192.168.61.237:8000/api/notes/');
 
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
         var jsonDecoded = response.body;
         databaseNote = databaseNotesFromJson(jsonDecoded);
-
       }
-    } catch (e) {
-    }
+    } catch (e) {}
 
     return databaseNote;
   }
@@ -155,28 +146,29 @@ class NotesService {
   // --------------------------------
 
   Future<DatabaseNote> getNoteEmptyNew() async {
-
     var databaseNote = [
       DatabaseNote(
-          id: ' foobazo ', userId: ' foobazo ', text: ' foobazo ', isSyncedWithCloud: false),
+          id: ' foobazo ',
+          userId: ' foobazo ',
+          text: ' foobazo ',
+          isSyncedWithCloud: false),
       DatabaseNote(
-          id: ' foobazo ', userId: ' foobazo ', text: ' foobazo ', isSyncedWithCloud: false),
-    
+          id: ' foobazo ',
+          userId: ' foobazo ',
+          text: ' foobazo ',
+          isSyncedWithCloud: false),
     ];
 
     try {
-      Uri url = Uri.parse('http://192.168.1.71:8000/api/notes/');
+      Uri url = Uri.parse('http://192.168.61.237:8000/api/notes/');
 
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
         var jsonDecoded = response.body;
         databaseNote = databaseNotesFromJson(jsonDecoded);
-
       }
-  
-    } catch (e) {
-    }
+    } catch (e) {}
 
     final firstNote = databaseNote.last;
 
@@ -195,9 +187,8 @@ class NotesService {
   }
 
   Future<void> deleteNote({required String id}) async {
-
     try {
-      Uri url = Uri.parse('http://192.168.1.71:8000/api/notes/$id/delete/');
+      Uri url = Uri.parse('http://192.168.61.237:8000/api/notes/$id/delete/');
 
       final response = await http.delete(
         url,
@@ -206,17 +197,13 @@ class NotesService {
         },
       );
 
-
-
-
       if (response.statusCode == 204) {
         var jsonDecoded = response.body;
       }
 
       _notes.removeWhere((note) => note.id == id);
       _notesStreamController.add(_notes);
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
 // #########################################################################
@@ -224,11 +211,13 @@ class NotesService {
   var mynote = 100;
 
   Future<DatabaseNote> createNote() async {
- 
     var text = 'New note $mynote';
-  
+
     var note = DatabaseNote(
-        id: ' foobazoo ', userId: ' foobazoo ', text: text, isSyncedWithCloud: false);
+        id: ' foobazoo ',
+        userId: ' foobazoo ',
+        text: text,
+        isSyncedWithCloud: false);
 
     var data = jsonEncode({
       "user_id": "ac3672ae-c01c-4cb0-a588-8720b2a39b38",
@@ -237,7 +226,7 @@ class NotesService {
     });
 
     try {
-      Uri url = Uri.parse('http://192.168.1.71:8000/api/notes/');
+      Uri url = Uri.parse('http://192.168.61.237:8000/api/notes/');
 
       final response = await http.post(url,
           headers: {
@@ -246,8 +235,7 @@ class NotesService {
           body: data);
 
       mynote += 1;
-    } catch (e) {
-    }
+    } catch (e) {}
 
     return note;
   }
@@ -364,7 +352,6 @@ class NotesService {
     }
   }
 }
-
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
